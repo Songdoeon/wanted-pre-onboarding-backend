@@ -1,14 +1,11 @@
 package com.wanted.onboarding.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import javax.validation.constraints.Min;
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
-import javax.persistence.Column;
 import javax.validation.constraints.Size;
 
 @Getter
