@@ -36,12 +36,8 @@ public class SecurityConfig {
 
         AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
 
-        return http.authorizeRequests(authroize -> authroize.antMatchers("/user/**")
+        return http.authorizeRequests(authroize -> authroize.antMatchers("/api/**")
                 .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-                .antMatchers("/manager/**")
-                .access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-                .antMatchers("/admin/**")
-                .access("hasRole('ROLE_ADMIN')")
                 .anyRequest().permitAll())
             .authenticationManager(authenticationManager)
             .addFilter(corsConfig.corsFilter())
