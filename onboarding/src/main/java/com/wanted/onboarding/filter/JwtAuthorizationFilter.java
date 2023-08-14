@@ -4,6 +4,8 @@ package com.wanted.onboarding.filter;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.wanted.onboarding.auth.PrincipalDetails;
+import com.wanted.onboarding.error.CommonErrorCode;
+import com.wanted.onboarding.error.exception.NotFoundUserException;
 import com.wanted.onboarding.model.User;
 import com.wanted.onboarding.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,12 +31,10 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         String header = request.getHeader(JwtProperties.HEADER_STRING);
-        System.out.println("들어옴");
         if (header == null || !header.startsWith(JwtProperties.TOKEN_PREFIX)) {
             chain.doFilter(request, response);
             return;
         }
-        System.out.println("header : " + header);
         String token = request.getHeader(JwtProperties.HEADER_STRING)
                 .replace(JwtProperties.TOKEN_PREFIX, "");
 
@@ -45,7 +45,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 .getClaim("username").asString();
 
         if (username != null) {
-            User user = userRepository.findByUsername(username);
+            User user = userRepository.findByUsername(username).orElseThrow(()-> new NotFoundUserException(CommonErrorCode.NOT_FOUND_USER));
 
             // 인증은 토큰 검증시 끝. 인증을 하기 위해서가 아닌 스프링 시큐리티가 수행해주는 권한 처리를 위해
             // 아래와 같이 토큰을 만들어서 Authentication 객체를 강제로 만들고 그걸 세션에 저장!
