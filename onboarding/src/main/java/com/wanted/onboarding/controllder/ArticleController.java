@@ -4,8 +4,13 @@ import com.wanted.onboarding.dto.ArticleRequestDTO;
 import com.wanted.onboarding.dto.ArticleResponseDTO;
 import com.wanted.onboarding.service.ArticleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -29,8 +34,15 @@ public class ArticleController {
         return ResponseEntity.ok(article);
     }
 
+    @GetMapping(value = "/pageable")
+    public ResponseEntity<List<ArticleResponseDTO>> list(Pageable pageable) {
+        List<ArticleResponseDTO> list = service.pageable(pageable);
+
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Long> delete(@PathVariable Long id) throws Exception {
+    public ResponseEntity<Long> delete(@PathVariable Long id){
         service.delete(id);
         return ResponseEntity.ok(id);
     }
