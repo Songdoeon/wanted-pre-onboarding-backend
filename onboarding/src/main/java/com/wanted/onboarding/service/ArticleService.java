@@ -66,7 +66,13 @@ public class ArticleService {
                 .collect(Collectors.toList());
     }
     public ArticleResponseDTO update(Long id, ArticleRequestDTO DTO){
+
         Article article = articleRepository.findById(id).orElseThrow(()-> new NotFoundArticleException(CommonErrorCode.NOT_FOUND_ARTICLE));
+
+        if(!checkWriter(article.getWriter().getUsername())){
+            throw new NotMatchedWriterException(CommonErrorCode.NOT_MATCHED_WRITER);
+        }
+
         article.update(DTO);
 
         return new ArticleResponseDTO().builder()
@@ -84,10 +90,17 @@ public class ArticleService {
         }
         Article article = articleRepository.findById(id).orElseThrow(()-> new NotFoundArticleException(CommonErrorCode.NOT_FOUND_ARTICLE));
 
-        String username = authenticationGetUsername();
-        if(!article.getWriter().getUsername().equals(username)) throw new NotMatchedWriterException(CommonErrorCode.NOT_MATCHED_WRITER);
+        if(!checkWriter(article.getWriter().getUsername())){
+            throw new NotMatchedWriterException(CommonErrorCode.NOT_MATCHED_WRITER);
+        }
 
         articleRepository.delete(article);
+    }
+
+    private boolean checkWriter(String writer){
+        String username = authenticationGetUsername();
+        if(writer.equals(username)) return true;
+        return false;
     }
 
     private String authenticationGetUsername() {
