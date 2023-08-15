@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  database:
+    container_name: mysql
+    image: mysql
+    environment:
+      MYSQL_DATABASE: board
+      MYSQL_ROOT_HOST: root
+      MYSQL_ROOT_PASSWORD: 1234
+      TZ: 'Asia/Seoul'
+    ports:
+      - "3306:3306"
+
+    networks:
+      - test_network
+
+  application:
+    container_name: app_server
+    image: songdo/wanted-pre-onboarding-backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/board?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234
+    networks:
+      - test_network
+
+networks:
+  test_network:
