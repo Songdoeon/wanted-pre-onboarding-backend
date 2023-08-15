@@ -4,6 +4,7 @@ import com.wanted.onboarding.dto.ArticleRequestDTO;
 import com.wanted.onboarding.dto.ArticleResponseDTO;
 import com.wanted.onboarding.error.CommonErrorCode;
 import com.wanted.onboarding.error.exception.NotFoundArticleException;
+import com.wanted.onboarding.error.exception.NotFoundUserException;
 import com.wanted.onboarding.error.exception.NotMatchedWriterException;
 import com.wanted.onboarding.model.Article;
 import com.wanted.onboarding.model.User;
@@ -31,7 +32,7 @@ public class ArticleService {
     public Long register(ArticleRequestDTO DTO){
 
         String username = authenticationGetUsername();
-        User user = userRepository.findByUsername(username).orElseThrow();
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundUserException(CommonErrorCode.NOT_FOUND_USER));
         Article article = new Article().builder()
                 .content(DTO.getContent())
                 .title(DTO.getTitle())
@@ -84,7 +85,7 @@ public class ArticleService {
                 .updatedDate(article.getUpdatedDate())
                 .build();
     }
-    public void delete(Long id){
+    public Long delete(Long id){
         if (!articleRepository.existsById(id)) {
             throw new NotFoundArticleException(CommonErrorCode.NOT_FOUND_ARTICLE);
         }
@@ -95,6 +96,7 @@ public class ArticleService {
         }
 
         articleRepository.delete(article);
+        return id;
     }
 
     private boolean checkWriter(String writer){
