@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wanted.onboarding.auth.PrincipalDetails;
-import com.wanted.onboarding.dto.UserRequest;
+import com.wanted.onboarding.dto.UserRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,9 +32,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // request에 있는 username과 password를 파싱해서 자바 Object로 받기
         ObjectMapper om = new ObjectMapper();
-        UserRequest loginRequestDto = null;
+        UserRequestDTO loginRequestDto = null;
         try {
-            loginRequestDto = om.readValue(request.getInputStream(), UserRequest.class);
+            loginRequestDto = om.readValue(request.getInputStream(), UserRequestDTO.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
