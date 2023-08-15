@@ -2,16 +2,19 @@ version: '3'
 
 services:
   database:
-    container_name: mysql
-    image: mysql
+    container_name: mymysql
+    image: mysql/mysql-server:5.7
     environment:
       MYSQL_DATABASE: board
-      MYSQL_ROOT_HOST: root
+      MYSQL_ROOT_HOST: '%'
       MYSQL_ROOT_PASSWORD: 1234
       TZ: 'Asia/Seoul'
     ports:
       - "3306:3306"
-
+    command:
+        - "mysqld"
+        - "--character-set-server=utf8mb4"
+        - "--collation-server=utf8mb4_unicode_ci"
     networks:
       - test_network
 
@@ -21,9 +24,11 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/board?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
+      SPRING_DATASOURCE_URL: jdbc:mysql://mymysql:3306/board?useSSL=false&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: 1234
+    depends_on:
+      - database
     networks:
       - test_network
 
