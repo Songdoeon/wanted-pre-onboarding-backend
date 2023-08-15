@@ -11,11 +11,11 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-@Table(name = "article")
+@Table(name = "articles")
 public class Article extends BaseTime{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
+    @Column(name = "article_id")
     private Long id;
 
     @Column(length = 20, nullable = false)
@@ -25,7 +25,7 @@ public class Article extends BaseTime{
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "user_id")
     private User writer;
 
     public void update(ArticleRequestDTO DTO){
