@@ -1,10 +1,7 @@
 package com.wanted.onboarding.model;
 
 import com.wanted.onboarding.dto.ArticleRequestDTO;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -13,6 +10,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Table(name = "article")
 public class Article extends BaseTime{
     @Id
